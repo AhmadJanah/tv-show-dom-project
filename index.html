@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TV Show Project | Ahmad Janah (AhmadJanah)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
+</head>
 
-  <body>
-    <div id="root">
-    </div>
+<body>
+    <header></header>
+    <main>
+        <div id="root">
+            <div>
+                <label for="episodeSelect">Choose an episode:</label>
+                
+                <select name="episodeSelect" id="episodeSelect" onchange="getSelectedEpisode()">
+                    <option value="all"></option>
+                </select>
+                <label for="searchText">Looking for:</label>
+                <input type="text" id="searchText" name="searchText" oninput="searchEpisode()">
+                <label id="resultsCount"></label>
+            </div>
+            <div id="epContainer" class="episodesContainer">
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+            </div>
+        </div>
 
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
-  </body>
+        <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+        <script src="episodes.js"></script>
+
+        <!-- Loads YOUR javascript code -->
+        <script src="script.js"></script>
+    </main>
+    <footer>
+        <div>
+            <p>All data in this website is taken from
+                <a href="TVMaze.com">TV Maze website</a>
+            </p>
+        </div>
+    </footer>
+</body>
+
 </html>

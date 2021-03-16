@@ -1,3 +1,69 @@
-#root {
-  color: red;
-}
+    #root {
+        padding: 2rem;
+        background-color: #a8dadc;
+    }
+    
+    .episodesContainer {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+    }
+    
+    .divEpisode {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: 31%;
+        min-height: 32rem;
+        background-color: #f1faee;
+        color: #6b705c;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 1rem;
+        margin: 0.5rem;
+    }
+    
+    .episodeName {
+        color: #6b705c;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        border: 2px solid #1d3557;
+        border-radius: 5px;
+        width: 100%;
+        text-align: center;
+        /* background-color: #ddbea9; */
+        font-weight: bold;
+    }
+    
+    .summaryTextDiv {
+        margin: 10%;
+        color: #1d3557;
+    }
+    
+    footer {
+        background-color: #457b9d;
+        padding: 2%;
+        font-size: small;
+        color: #a8dadc;
+    }
+
+    .resultSearch{
+        background-color: #a8dadc;
+    }
+    
+    #episodeSelect{
+        width: 20rem;
+    }
+
+    @media screen and (max-width: 950px) {
+        .divEpisode {
+            width: 45%;
+        }
+    }
+    
+    @media screen and (max-width: 650px) {
+        .divEpisode {
+            width: 95%;
+        }
+    }
