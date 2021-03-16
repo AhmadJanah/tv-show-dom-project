@@ -100,6 +100,7 @@ function clearRoot(){
 
 function searchEpisode(){
     let textVal = document.getElementById("searchText").value;
+    document.getElementById("episodeSelect").value = "";
     const allEpisodes = getAllEpisodes();
     let newEpisodes = [];
     allEpisodes.forEach(episode => {
