@@ -106,9 +106,20 @@ function searchEpisode(){
     allEpisodes.forEach(episode => {
         
         if (episode.summary.toUpperCase().includes(textVal.toUpperCase()) || episode.name.toUpperCase().includes(textVal.toUpperCase())){
-            let tempSummary = episode.summary.replace(textVal, `<span class="resultSearch">${textVal}</span>`);
+            let searchText = textVal.charAt(0).toUpperCase() + textVal.substring(1);
+            let searchText2 = textVal.charAt(0) + textVal.substring(1).toLowerCase();
+            console.log(searchText);
+            let tempSummary = episode.summary.replace(textVal, `<span class="resultSearch">${textVal}</span>`)
+            .replace(searchText, `<span class="resultSearch">${searchText}</span>`)
+            .replace(textVal.toUpperCase(), `<span class="resultSearch">${textVal.toUpperCase()}</span>`)
+            .replace(textVal.toLowerCase(), `<span class="resultSearch">${textVal.toLowerCase()}</span>`)
+            .replace(searchText2, `<span class="resultSearch">${searchText2}</span>`);
             episode.summary = tempSummary;
-            let tempTitle = episode.name.replace(textVal, `<span class="resultSearch">${textVal}</span>`);
+            let tempTitle = episode.name.replace(textVal, `<span class="resultSearch">${textVal}</span>`)
+            .replace(searchText, `<span class="resultSearch">${searchText}</span>`)
+            .replace(textVal.toUpperCase(), `<span class="resultSearch">${textVal.toUpperCase()}</span>`)
+            .replace(textVal.toLowerCase(), `<span class="resultSearch">${textVal.toLowerCase()}</span>`)
+            .replace(searchText2, `<span class="resultSearch">${searchText2}</span>`);
             episode.name = tempTitle;
             newEpisodes.push(episode);
        }
