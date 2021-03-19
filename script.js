@@ -100,30 +100,45 @@ function clearRoot(){
 
 function searchEpisode(){
     let textVal = document.getElementById("searchText").value;
+    let searchText = textVal.charAt(0).toUpperCase() + textVal.substring(1);
+    let searchText2 = textVal.charAt(0) + textVal.substring(1).toLowerCase();
     document.getElementById("episodeSelect").value = "";
     const allEpisodes = getAllEpisodes();
     let newEpisodes = [];
     allEpisodes.forEach(episode => {
-        
-        if (episode.summary.toUpperCase().includes(textVal.toUpperCase()) || episode.name.toUpperCase().includes(textVal.toUpperCase())){
-            let searchText = textVal.charAt(0).toUpperCase() + textVal.substring(1);
-            let searchText2 = textVal.charAt(0) + textVal.substring(1).toLowerCase();
-            console.log(searchText);
-            let tempSummary = episode.summary.replace(textVal, `<span class="resultSearch">${textVal}</span>`)
-            .replace(searchText, `<span class="resultSearch">${searchText}</span>`)
-            .replace(textVal.toUpperCase(), `<span class="resultSearch">${textVal.toUpperCase()}</span>`)
-            .replace(textVal.toLowerCase(), `<span class="resultSearch">${textVal.toLowerCase()}</span>`)
-            .replace(searchText2, `<span class="resultSearch">${searchText2}</span>`);
-            episode.summary = tempSummary;
-            let tempTitle = episode.name.replace(textVal, `<span class="resultSearch">${textVal}</span>`)
-            .replace(searchText, `<span class="resultSearch">${searchText}</span>`)
-            .replace(textVal.toUpperCase(), `<span class="resultSearch">${textVal.toUpperCase()}</span>`)
-            .replace(textVal.toLowerCase(), `<span class="resultSearch">${textVal.toLowerCase()}</span>`)
-            .replace(searchText2, `<span class="resultSearch">${searchText2}</span>`);
-            episode.name = tempTitle;
+        if (episode.summary.toUpperCase().includes(textVal.toUpperCase()) || episode.name.toUpperCase().includes(textVal.toUpperCase())) {
+            let tempSummary;
+            let tempTitle;
+            if (episode.summary.toUpperCase().includes(textVal.toUpperCase())) {
+                if (episode.summary.includes(textVal))
+                    tempSummary = episode.summary.replace(textVal, `<span>${textVal}</span>`)
+                else if (episode.summary.includes(searchText))
+                    tempSummary = episode.summary.replace(searchText, `<span>${searchText}</span>`)
+                else if (episode.summary.includes(searchText2))
+                    tempSummary = episode.summary.replace(searchText2, `<span>${searchText2}</span>`)
+                else if (episode.summary.includes(textVal.toUpperCase()))
+                    tempSummary = episode.summary.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`)
+                else if (episode.summary.includes(textVal.toLowerCase()))
+                    tempSummary = episode.summary.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`)
+                episode.summary = tempSummary;
+            }
+
+            if (episode.name.toUpperCase().includes(textVal.toUpperCase())) {
+                if (episode.name.includes(textVal))
+                    tempTitle = episode.name.replace(textVal, `<span>${textVal}</span>`)
+                else if (episode.name.includes(searchText))
+                    tempTitle = episode.name.replace(searchText, `<span>${searchText}</span>`)
+                else if (episode.name.includes(searchText2))
+                    tempTitle = episode.name.replace(searchText2, `<span>${searchText2}</span>`)
+                else if (episode.name.includes(textVal.toUpperCase()))
+                    tempTitle = episode.name.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`)
+                else if (episode.name.includes(textVal.toLowerCase()))
+                    tempTitle = episode.name.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`)
+                episode.name = tempTitle;
+            }
             newEpisodes.push(episode);
-       }
-        
+        }
+       
     })
 
     clearRoot();
