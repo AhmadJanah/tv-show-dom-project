@@ -1,9 +1,32 @@
 //You can edit ALL of the code here
-function setup() {
-    const allEpisodes = getAllEpisodes();
-    makePageForEpisodes(allEpisodes);
-    setupSelector(allEpisodes);
+let allEpisodes;
+function setup(url) {
+
+    // URL = "https://api.tvmaze.com/shows/82/episodes";
+
+    fetch(url).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        }
+        throw `${response.sttus} ${response.statusText}`
+    })
+        .then(function (data) {
+            allEpisodes = data; 
+            ClearEpisodeSelect();
+            makePageForEpisodes(allEpisodes);
+            setupSelector(allEpisodes);
+        })
+        .catch(function (error) {
+            console.log("There are some Errors", error);
+        })
+
+
+
 }
+
+
+/////////////////// *********           Episodes Section           *********////////////////
+
 
 function makePageForEpisodes(episodeList) {
     const rootElem = document.getElementById("root");
@@ -17,6 +40,12 @@ function setupSelector(episodeList){
     let episodeSelect = document.getElementById("episodeSelect");
     episodeList.forEach(episode => {
         setSelectorEpisode(episode, episodeSelect);
+    });
+
+    const allShows = getAllShows();
+    let showSelect = document.getElementById("showsSelect");
+    allShows.forEach(show => {
+        setSelectorShow(show, showSelect);
     });
 }
 
@@ -37,7 +66,8 @@ function setBoxEpisode(episode) {
     let imgDiv = document.createElement("div");
     imgDiv.className = "imgDiv";
     let midImg = document.createElement("img");
-    midImg.src = episode.image.medium;
+    if (episode.image != null)
+        midImg.src = episode.image.medium;
     midImg.alt = "Medium Image";
     imgDiv.appendChild(midImg);
     divEpisode.appendChild(imgDiv);
@@ -67,7 +97,9 @@ function getEpisodeCode(episode) {
 function setSelectorEpisode(episode, episodeSelect){
     let episodeTitle = getEpisodeCode(episode) + " - " + episode.name;
     let episodeOption = document.createElement("option");
+    
     episodeOption.value = episode.name;
+    episodeOption.className = "episodeOption";
     episodeOption.innerHTML = episodeTitle;
     episodeSelect.appendChild(episodeOption);
 
@@ -75,18 +107,30 @@ function setSelectorEpisode(episode, episodeSelect){
 
 function getSelectedEpisode(){
     let selectorVal = document.getElementById("episodeSelect").value;
-    const allEpisodes = getAllEpisodes();
+    // const allEpisodes = getAllEpisodes();
     let resultsCount = document.getElementById("resultsCount");
     resultsCount.innerHTML = " ";
     document.getElementById("searchText").value = ""; 
     clearRoot();
+    clearAllSpans(allEpisodes);
     if (selectorVal === "all"){
         makePageForEpisodes(allEpisodes);
     }
     else{
         let newEpisode = allEpisodes.find(episode => episode.name === selectorVal);
+        // newEpisode.summary = clearSpan(newEpisode.summary);
+        // newEpisode.name = clearSpan(newEpisode.name);
         setBoxEpisode(newEpisode);
     } 
+
+}
+
+function ClearEpisodeSelect(){
+    let episodeSelect = document.getElementById("episodeSelect");
+    let episodeOptions = document.querySelectorAll(".episodeOption");
+    episodeOptions.forEach(opt =>{
+        episodeSelect.removeChild(opt);
+    })
 }
 
 function clearRoot(){
@@ -98,44 +142,71 @@ function clearRoot(){
     })
 }
 
+function clearSpan(str){
+    if (str != null){
+        let tempStr = str;
+        
+        if (tempStr.includes("span")){
+                tempStr = tempStr.replace("<span>","");
+                tempStr = tempStr.replace("</span>", "");
+            }
+        return tempStr;
+    }
+}
+
+function clearAllSpans(arr){
+    arr.forEach(ar => {
+        ar.name = clearSpan(ar.name);
+        ar.summary = clearSpan(ar.summary);
+    })
+}
+
 function searchEpisode(){
     let textVal = document.getElementById("searchText").value;
     let searchText = textVal.charAt(0).toUpperCase() + textVal.substring(1);
     let searchText2 = textVal.charAt(0) + textVal.substring(1).toLowerCase();
     document.getElementById("episodeSelect").value = "";
-    const allEpisodes = getAllEpisodes();
+    // const allEpisodes = getAllEpisodes();
+    clearAllSpans(allEpisodes);
     let newEpisodes = [];
     allEpisodes.forEach(episode => {
+
         if (episode.summary.toUpperCase().includes(textVal.toUpperCase()) || episode.name.toUpperCase().includes(textVal.toUpperCase())) {
-            let tempSummary;
-            let tempTitle;
-            if (episode.summary.toUpperCase().includes(textVal.toUpperCase())) {
-                if (episode.summary.includes(textVal))
-                    tempSummary = episode.summary.replace(textVal, `<span>${textVal}</span>`)
-                else if (episode.summary.includes(searchText))
-                    tempSummary = episode.summary.replace(searchText, `<span>${searchText}</span>`)
-                else if (episode.summary.includes(searchText2))
-                    tempSummary = episode.summary.replace(searchText2, `<span>${searchText2}</span>`)
-                else if (episode.summary.includes(textVal.toUpperCase()))
-                    tempSummary = episode.summary.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`)
-                else if (episode.summary.includes(textVal.toLowerCase()))
-                    tempSummary = episode.summary.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`)
+            let tempSummary = episode.summary;
+            let tempTitle = episode.name;
+
+            if (tempSummary.toUpperCase().includes(textVal.toUpperCase())) {
+
+                if (tempSummary.includes(textVal))
+                    tempSummary = tempSummary.replace(textVal, `<span>${textVal}</span>`);
+                else if (tempSummary.includes(searchText))
+                    tempSummary = tempSummary.replace(searchText, `<span>${searchText}</span>`);
+                else if (tempSummary.includes(searchText2))
+                    tempSummary = tempSummary.replace(searchText2, `<span>${searchText2}</span>`);
+                else if (tempSummary.includes(textVal.toUpperCase()))
+                    tempSummary = tempSummary.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`);
+                else if (tempSummary.includes(textVal.toLowerCase()))
+                    tempSummary = tempSummary.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`);
+
                 episode.summary = tempSummary;
             }
 
-            if (episode.name.toUpperCase().includes(textVal.toUpperCase())) {
-                if (episode.name.includes(textVal))
-                    tempTitle = episode.name.replace(textVal, `<span>${textVal}</span>`)
-                else if (episode.name.includes(searchText))
-                    tempTitle = episode.name.replace(searchText, `<span>${searchText}</span>`)
-                else if (episode.name.includes(searchText2))
-                    tempTitle = episode.name.replace(searchText2, `<span>${searchText2}</span>`)
-                else if (episode.name.includes(textVal.toUpperCase()))
-                    tempTitle = episode.name.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`)
-                else if (episode.name.includes(textVal.toLowerCase()))
-                    tempTitle = episode.name.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`)
+            if (tempTitle.toUpperCase().includes(textVal.toUpperCase())) {
+                
+                if (tempTitle.includes(textVal))
+                    tempTitle = tempTitle.replace(textVal, `<span>${textVal}</span>`);
+                else if (tempTitle.includes(searchText))
+                    tempTitle = tempTitle.replace(searchText, `<span>${searchText}</span>`);
+                else if (tempTitle.includes(searchText2))
+                    tempTitle = tempTitle.replace(searchText2, `<span>${searchText2}</span>`);
+                else if (tempTitle.includes(textVal.toUpperCase()))
+                    tempTitle = tempTitle.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`);
+                else if (tempTitle.includes(textVal.toLowerCase()))
+                    tempTitle = tempTitle.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`);
+
                 episode.name = tempTitle;
             }
+            
             newEpisodes.push(episode);
         }
        
@@ -147,4 +218,42 @@ function searchEpisode(){
     makePageForEpisodes(newEpisodes)
 }
 
-window.onload = setup;
+function copyArray(arr){
+    let newArr = [];
+    arr.forEach(ar =>{
+        newArr.push(ar);
+    })
+    return newArr;
+}
+
+
+
+
+/////////////////// *********           Shows Section           *********////////////////
+
+function setSelectorShow(show, showSelect) {
+    let showOption = document.createElement("option");
+    showOption.value = show.name;
+    showOption.innerHTML = show.name;
+    showSelect.appendChild(showOption);
+
+}
+
+function getSelectedShow(){
+    let selectorVal = document.getElementById("showsSelect").value;
+    const allShows = getAllShows();
+    
+    // if (selectorVal === "all") {
+    //     makePageForEpisodes(allEpisodes);
+    // }
+    // else {
+        let newShow = allShows.find(show => show.name === selectorVal);
+   
+    let myUrl = `https://api.tvmaze.com/shows/${newShow.id}/episodes`;
+    
+    clearRoot();
+    setup(myUrl);
+    // }
+}
+
+window.onload = setup("https://api.tvmaze.com/shows/83/episodes");

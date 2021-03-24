@@ -14,12 +14,12 @@
     <main>
         <div id="root">
             <div>
-                <label for="episodeSelect">Choose an episode:</label>
-                
+            <select name="showsSelect" id="showsSelect" onchange="getSelectedShow()">
+                <!--option value="all"></option-->
+            </select>
                 <select name="episodeSelect" id="episodeSelect" onchange="getSelectedEpisode()">
                     <option value="all"></option>
                 </select>
-                <label for="searchText">Looking for:</label>
                 <input type="text" id="searchText" name="searchText" oninput="searchEpisode()">
                 <label id="resultsCount"></label>
             </div>
@@ -30,6 +30,8 @@
 
         <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
         <script src="episodes.js"></script>
+        <!-- Loads a provided function called getAllShows() which returns all shows -->
+        <script src="shows.js"></script>
 
         <!-- Loads YOUR javascript code -->
         <script src="script.js"></script>

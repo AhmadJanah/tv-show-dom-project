@@ -52,8 +52,10 @@
         background-color: #a8dadc;
     }
     
-    #episodeSelect{
-        width: 20rem;
+    #showsSelect, #episodeSelect{
+        width: 15rem;
+        border: 1px solid #1d3557;
+        border-radius: 5px;
     }
 
     @media screen and (max-width: 950px) {
