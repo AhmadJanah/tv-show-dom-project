@@ -24,6 +24,20 @@ function setup(url) {
 
 }
 
+function compare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+
+    let comparison = 0;
+    if (nameA > nameB) {
+        comparison = 1;
+    } else if (nameA < nameB) {
+        comparison = -1;
+    }
+    return comparison;
+}
+
 
 /////////////////// *********           Episodes Section           *********////////////////
 
@@ -43,6 +57,7 @@ function setupSelector(episodeList){
     });
 
     const allShows = getAllShows();
+    allShows.sort(compare);
     let showSelect = document.getElementById("showsSelect");
     allShows.forEach(show => {
         setSelectorShow(show, showSelect);
@@ -256,4 +271,4 @@ function getSelectedShow(){
     // }
 }
 
-window.onload = setup("https://api.tvmaze.com/shows/83/episodes");
+window.onload = setup("https://api.tvmaze.com/shows/167/episodes");
