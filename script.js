@@ -1,17 +1,27 @@
 //You can edit ALL of the code here
-let allEpisodes;
-function setup(url) {
 
-    // URL = "https://api.tvmaze.com/shows/82/episodes";
+////////////  **********               Episodes           **********////////////
+// This variable contain all Episodes
+let allEpisodes;
+
+function setup() {
+    // setAllEpisodes("https://api.tvmaze.com/shows/167/episodes");
+    const allShows = getAllShows();
+    setAllShows(allShows);
+}
+
+// Fetch the episodes by API
+function setAllEpisodes(url){
+    // let url = "https://api.tvmaze.com/shows/167/episodes";
 
     fetch(url).then(function (response) {
         if (response.ok) {
             return response.json();
         }
-        throw `${response.sttus} ${response.statusText}`
+        throw `${response.status} ${response.statusText}`
     })
         .then(function (data) {
-            allEpisodes = data; 
+            allEpisodes = data;
             ClearEpisodeSelect();
             makePageForEpisodes(allEpisodes);
             setupSelector(allEpisodes);
@@ -19,11 +29,9 @@ function setup(url) {
         .catch(function (error) {
             console.log("There are some Errors", error);
         })
-
-
-
 }
 
+//   To help in sorting
 function compare(a, b) {
     // Use toUpperCase() to ignore character casing
     const nameA = a.name.toUpperCase();
@@ -38,32 +46,23 @@ function compare(a, b) {
     return comparison;
 }
 
-
-/////////////////// *********           Episodes Section           *********////////////////
-
-
+// loop on all episodes to draw the page DOM
 function makePageForEpisodes(episodeList) {
-    const rootElem = document.getElementById("root");
+    
     episodeList.forEach(episode => {
         setBoxEpisode(episode);
     });
-    //rootElem.textContent = `Got ${episodeList.length} episode(s)`;
 }
 
+// prepare the episode selector
 function setupSelector(episodeList){
     let episodeSelect = document.getElementById("episodeSelect");
     episodeList.forEach(episode => {
         setSelectorEpisode(episode, episodeSelect);
     });
-
-    const allShows = getAllShows();
-    allShows.sort(compare);
-    let showSelect = document.getElementById("showsSelect");
-    allShows.forEach(show => {
-        setSelectorShow(show, showSelect);
-    });
 }
 
+// Draw the episode inside the div
 function setBoxEpisode(episode) {
     let epContainer = document.getElementById("epContainer");
     
@@ -76,8 +75,7 @@ function setBoxEpisode(episode) {
     episodeNameTitle.innerHTML = episode.name + " - " + getEpisodeCode(episode);
     episodeName.appendChild(episodeNameTitle);
     divEpisode.appendChild(episodeName);
-    let linebreak = document.createElement("br");
-    divEpisode.appendChild(linebreak);
+    appendLineBreak(divEpisode);
     let imgDiv = document.createElement("div");
     imgDiv.className = "imgDiv";
     let midImg = document.createElement("img");
@@ -97,6 +95,7 @@ function setBoxEpisode(episode) {
 
 }
 
+// setup the code pf the Episode to add it in the title
 function getEpisodeCode(episode) {
     let season = episode.season;
     let number = episode.number;
@@ -109,6 +108,7 @@ function getEpisodeCode(episode) {
 
 }
 
+// Draw the episode inside the selector
 function setSelectorEpisode(episode, episodeSelect){
     let episodeTitle = getEpisodeCode(episode) + " - " + episode.name;
     let episodeOption = document.createElement("option");
@@ -120,9 +120,9 @@ function setSelectorEpisode(episode, episodeSelect){
 
 }
 
+// To get the selected Episode and prepare the page according to the selection
 function getSelectedEpisode(){
     let selectorVal = document.getElementById("episodeSelect").value;
-    // const allEpisodes = getAllEpisodes();
     let resultsCount = document.getElementById("resultsCount");
     resultsCount.innerHTML = " ";
     document.getElementById("searchText").value = ""; 
@@ -133,13 +133,12 @@ function getSelectedEpisode(){
     }
     else{
         let newEpisode = allEpisodes.find(episode => episode.name === selectorVal);
-        // newEpisode.summary = clearSpan(newEpisode.summary);
-        // newEpisode.name = clearSpan(newEpisode.name);
         setBoxEpisode(newEpisode);
     } 
 
 }
 
+// Clear all previous fill in the episodes selector
 function ClearEpisodeSelect(){
     let episodeSelect = document.getElementById("episodeSelect");
     let episodeOptions = document.querySelectorAll(".episodeOption");
@@ -148,15 +147,17 @@ function ClearEpisodeSelect(){
     })
 }
 
+// Clear all previous episodes fill in episode div
 function clearRoot(){
     let epContainer = document.getElementById("epContainer");
     
     let divEpisode = document.querySelectorAll(".divEpisode");
     divEpisode.forEach(dive => {
         epContainer.removeChild(dive);
-    })
+    })   
 }
 
+// remove all span from the episode texts
 function clearSpan(str){
     if (str != null){
         let tempStr = str;
@@ -169,6 +170,7 @@ function clearSpan(str){
     }
 }
 
+// to loop on episodes name and episodes summary
 function clearAllSpans(arr){
     arr.forEach(ar => {
         ar.name = clearSpan(ar.name);
@@ -176,6 +178,7 @@ function clearAllSpans(arr){
     })
 }
 
+// To find the episode that match writing in the search box and color its background 
 function searchEpisode(){
     let textVal = document.getElementById("searchText").value;
     let searchText = textVal.charAt(0).toUpperCase() + textVal.substring(1);
@@ -233,12 +236,14 @@ function searchEpisode(){
     makePageForEpisodes(newEpisodes)
 }
 
-function copyArray(arr){
-    let newArr = [];
-    arr.forEach(ar =>{
-        newArr.push(ar);
-    })
-    return newArr;
+// to return back to the Shows list
+function backToShows(){
+    
+    let episodediv = document.getElementById("allEpisodesContainer");
+    episodediv.hidden = true;
+    let showdiv = document.getElementById("allShowsContainer");
+    showdiv.hidden = false;
+    
 }
 
 
@@ -246,6 +251,7 @@ function copyArray(arr){
 
 /////////////////// *********           Shows Section           *********////////////////
 
+// Draw the content of shows selector
 function setSelectorShow(show, showSelect) {
     let showOption = document.createElement("option");
     showOption.value = show.name;
@@ -254,6 +260,7 @@ function setSelectorShow(show, showSelect) {
 
 }
 
+// To get the selected shoe from show selector and draw its episodes
 function getSelectedShow(){
     let selectorVal = document.getElementById("showsSelect").value;
     const allShows = getAllShows();
@@ -267,8 +274,211 @@ function getSelectedShow(){
     let myUrl = `https://api.tvmaze.com/shows/${newShow.id}/episodes`;
     
     clearRoot();
-    setup(myUrl);
+    setAllEpisodes(myUrl);
     // }
 }
 
-window.onload = setup("https://api.tvmaze.com/shows/167/episodes");
+/////  ******           Level 500         *********  ///////
+
+// Draw the show inside the div
+function setBoxShow(show) {
+    let shContainer = document.getElementById("shContainer");
+    appendLineBreak(shContainer);
+
+    let divShow = document.createElement("div");
+    divShow.className = "divShow";
+    let showName = document.createElement("div");
+    showName.className = "showName";
+    let showTitle = document.createElement("h1");
+    showTitle.innerHTML = show.name;
+    showTitle.addEventListener('click', (e) => {
+        goEpisodes(show.id);
+    });
+    showName.appendChild(showTitle);
+    divShow.appendChild(showName);
+
+    let detailsShowDiv = document.createElement("div");
+    detailsShowDiv.className = "detailsShowDiv";
+
+    let imgShowDiv = document.createElement("div");
+    imgShowDiv.className = "imgShowDiv";
+    let midImg = document.createElement("img");
+    midImg.className = "showImage";
+    if (show.image != null)
+        midImg.src = show.image.medium;
+    midImg.alt = "Show Medium Image";
+    imgShowDiv.appendChild(midImg);
+    detailsShowDiv.appendChild(imgShowDiv);
+    let summaryShowDiv = document.createElement("div");
+    summaryShowDiv.className = "summaryShowDiv";
+    let summaryShowP = document.createElement("p");
+    summaryShowP.innerHTML = show.summary;
+    summaryShowDiv.appendChild(summaryShowP);
+    detailsShowDiv.appendChild(summaryShowDiv);
+
+    let showPropertyDiv = document.createElement("div");
+    showPropertyDiv.className = "showPropertyDiv";
+    let rateShow = document.createElement("p");
+    rateShow.innerHTML = "Rated: " + show.rating.average;
+    showPropertyDiv.appendChild(rateShow);
+    // appendLineBreak(showPropertyDiv);
+    let genresShow = document.createElement("p");
+    genresShow.innerHTML = "Genres: " + show.genres;
+    showPropertyDiv.appendChild(genresShow);
+    // appendLineBreak(showPropertyDiv);
+    let statusShow = document.createElement("p");
+    statusShow.innerHTML = "Status: " + show.status;
+    showPropertyDiv.appendChild(statusShow);
+    let runTimeShow = document.createElement("p");
+    runTimeShow.innerHTML = "Status: " + show.runtime;
+    showPropertyDiv.appendChild(runTimeShow);
+
+    detailsShowDiv.appendChild(showPropertyDiv);
+    divShow.appendChild(detailsShowDiv);
+    shContainer.appendChild(divShow);
+
+}
+
+// Draw the episodes for the clicked show from the list
+function goEpisodes(showId){
+    let myUrl = `https://api.tvmaze.com/shows/${showId}/episodes`;
+    let showdiv = document.getElementById("allShowsContainer");
+    showdiv.hidden = true;
+    let episodediv = document.getElementById("allEpisodesContainer");
+    episodediv.hidden = false;
+    clearRoot();
+    setAllEpisodes(myUrl);
+
+    
+}
+
+// To draw a line break 
+function appendLineBreak(parent){
+    let linebreak = document.createElement("br");
+    parent.appendChild(linebreak);
+}
+
+// Main function to setup the page for drawing the shows list
+function setAllShows(theShows) {
+    
+    ClearEpisodeSelect();
+    makePageForShows(theShows);
+    setShowSelector();
+}
+
+// loop on all show to draw inside the div
+function makePageForShows(showList) {
+    let episodediv = document.getElementById("allEpisodesContainer");
+    episodediv.hidden = true;
+    let showdiv = document.getElementById("allShowsContainer");
+    showdiv.hidden = false;
+    // if (episodediv != null)
+    //     epContainer.remove(episodediv);
+    
+    showList.forEach(show => {
+        setBoxShow(show);
+    });
+    //rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+}
+
+// Draw the sortede shows inside the selector
+function setShowSelector(){
+    const allShows = getAllShows();
+    allShows.sort(compare);
+    let showSelect = document.getElementById("showsSelect");
+    allShows.forEach(show => {
+        setSelectorShow(show, showSelect);
+    });
+}
+
+function searchShow() {
+    let textVal = document.getElementById("showSearchText").value;
+    let searchText = textVal.charAt(0).toUpperCase() + textVal.substring(1);
+    let searchText2 = textVal.charAt(0) + textVal.substring(1).toLowerCase();
+    // document.getElementById("episodeSelect").value = "";
+    const allShows = getAllShows();
+    // clearAllSpans(allEpisodes);
+    let newShows = [];
+    allShows.forEach(show => {
+        
+        if (show.summary.toUpperCase().includes(textVal.toUpperCase()) || show.name.toUpperCase().includes(textVal.toUpperCase())
+            || show.genres.find(gen => gen.toUpperCase().includes(textVal.toUpperCase()))) {
+            let tempSummary = show.summary;
+            let tempTitle = show.name;
+            let tempGenres = show.genres;
+            
+
+            if (tempSummary.toUpperCase().includes(textVal.toUpperCase())) {
+
+                if (tempSummary.includes(textVal))
+                    tempSummary = tempSummary.replace(textVal, `<span>${textVal}</span>`);
+                else if (tempSummary.includes(searchText))
+                    tempSummary = tempSummary.replace(searchText, `<span>${searchText}</span>`);
+                else if (tempSummary.includes(searchText2))
+                    tempSummary = tempSummary.replace(searchText2, `<span>${searchText2}</span>`);
+                else if (tempSummary.includes(textVal.toUpperCase()))
+                    tempSummary = tempSummary.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`);
+                else if (tempSummary.includes(textVal.toLowerCase()))
+                    tempSummary = tempSummary.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`);
+
+                show.summary = tempSummary;
+            }
+
+            if (tempTitle.toUpperCase().includes(textVal.toUpperCase())) {
+
+                if (tempTitle.includes(textVal))
+                    tempTitle = tempTitle.replace(textVal, `<span>${textVal}</span>`);
+                else if (tempTitle.includes(searchText))
+                    tempTitle = tempTitle.replace(searchText, `<span>${searchText}</span>`);
+                else if (tempTitle.includes(searchText2))
+                    tempTitle = tempTitle.replace(searchText2, `<span>${searchText2}</span>`);
+                else if (tempTitle.includes(textVal.toUpperCase()))
+                    tempTitle = tempTitle.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`);
+                else if (tempTitle.includes(textVal.toLowerCase()))
+                    tempTitle = tempTitle.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`);
+
+                show.name = tempTitle;
+            }
+
+            if (tempGenres.find(gen => gen.toUpperCase().includes(textVal.toUpperCase()))) {
+                if (tempGenres.find(gen => gen.includes(textVal)))
+                    tempGenres = tempGenres.map(gen => gen.replace(textVal, `<span>${textVal}</span>`));
+                else if (tempGenres.find(gen => gen.includes(searchText)))
+                    tempGenres = tempGenres.map(gen => gen.replace(searchText, `<span>${searchText}</span>`));
+                else if (tempGenres.find(gen => gen.includes(searchText2)))
+                    tempGenres = tempGenres.map(gen => gen.replace(searchText2, `<span>${searchText2}</span>`));
+                else if (tempGenres.find(gen => gen.includes(textVal.toUpperCase())))
+                    tempGenres = tempGenres.map(gen => gen.replace(textVal.toUpperCase(), `<span>${textVal.toUpperCase()}</span>`));
+                else if (tempGenres.find(gen => gen.includes(textVal.toLowerCase())))
+                    tempGenres = tempGenres.map(gen => gen.replace(textVal.toLowerCase(), `<span>${textVal.toLowerCase()}</span>`));
+
+                show.genres = tempGenres;
+            }
+
+            newShows.push(show);
+        }
+
+    })
+    clearShows();
+    let showResultsCount = document.getElementById("showResultsCount");
+    showResultsCount.innerHTML = newShows.length + "/" + allShows.length + " Results";
+    setAllShows(newShows);
+}
+
+function clearShows(){
+    let shContainer = document.getElementById("shContainer");
+
+    let breakLines = shContainer.querySelectorAll("br");
+
+    let divShow = document.querySelectorAll(".divShow");
+    divShow.forEach(dive => {
+        shContainer.removeChild(dive);
+    })
+
+    breakLines.forEach(line => {
+        if (line.parentElement == shContainer)
+            shContainer.removeChild(line);
+    })
+}
+
+window.onload = setup

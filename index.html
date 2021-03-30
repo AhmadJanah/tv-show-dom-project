@@ -13,18 +13,26 @@
     <header></header>
     <main>
         <div id="root">
-            <div>
-            <select name="showsSelect" id="showsSelect" onchange="getSelectedShow()">
-                <!--option value="all"></option-->
-            </select>
+            <div id="allShowsContainer">
+                <select name="showsSelect" id="showsSelect" onchange="getSelectedShow()">
+                    <!--option value="all"></option-->
+                </select>
+                <input type="text" id="showSearchText" name="showSearchText" oninput="searchShow()" placeholder="Search for shows">
+                <label id="showResultsCount"></label>
+                <div id="shContainer" class="showsContainer">
+                
+                </div>
+            </div>
+            <div id="allEpisodesContainer">
                 <select name="episodeSelect" id="episodeSelect" onchange="getSelectedEpisode()">
                     <option value="all"></option>
                 </select>
-                <input type="text" id="searchText" name="searchText" oninput="searchEpisode()">
+                <input type="text" id="searchText" name="searchText" oninput="searchEpisode()" placeholder="Search for Episodes">
                 <label id="resultsCount"></label>
-            </div>
-            <div id="epContainer" class="episodesContainer">
+                <button onclick="backToShows()">Back to Shows list</button>
+                <div id="epContainer" class="episodesContainer">
 
+                </div>
             </div>
         </div>
 
@@ -38,7 +46,7 @@
     </main>
     <footer>
         <div>
-            <p>All data in this website is taken from
+            <p>All data in this website have imported from
                 <a href="TVMaze.com">TV Maze website</a>
             </p>
         </div>

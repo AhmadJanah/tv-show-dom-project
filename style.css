@@ -49,7 +49,7 @@
     }
 
     span{
-        background-color: #a8dadc;
+        background-color: #ffb703;
     }
     
     #showsSelect, #episodeSelect{
@@ -58,14 +58,70 @@
         border-radius: 5px;
     }
 
+
+
+    .divShow{
+        padding: 20px;
+        border: 2px solid #1d3557;
+        border-radius: 5px;
+    }
+
+    .detailsShowDiv{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        color: #6b705c;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 1rem;
+    }
+
+    h1{
+        cursor: pointer;
+    }
+
+    .showPropertyDiv{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .summaryShowDiv{
+        max-width: 50rem;
+    }
+
+    .showImage{
+        max-width: 8rem;
+    }
+
+    @media screen and (max-width: 1250px) {
+        .summaryShowDiv{
+            max-width: 30rem;
+        }
+    }
+    
     @media screen and (max-width: 950px) {
         .divEpisode {
             width: 45%;
+        }
+
+        .summaryShowDiv{
+        max-width: 20rem;
+        }
+
+        .showImage{
+        max-width: 6rem;
         }
     }
     
     @media screen and (max-width: 650px) {
         .divEpisode {
             width: 95%;
+        }
+
+        .summaryShowDiv{
+        max-width: 15rem;
+        }
+
+        .showImage{
+        max-width: 4rem;
         }
     }
