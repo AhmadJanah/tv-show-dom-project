@@ -115,7 +115,6 @@ function showCast(cast){
         charsDiv.className = "charsDiv";
         charsImg = document.createElement("img");
         charsImg.className = "charsImg";
-        console.log(showCast);
         if (showCast.person.image != null){
             if (showCast.person.image.medium != null)
                 charsImg.src = showCast.person.image.medium;
@@ -157,7 +156,6 @@ function personDetails(castId, personName, e){
         throw `${response.status} ${response.statusText}`
     })
         .then(function (data) {
-            // console.log(data);
             getCastShows(data, personName, e);
         })
         .catch(function (error) {
@@ -184,8 +182,6 @@ function getCastShows(allShows, personName, e){
     tempShowCastDiv.style.width = "16rem";
     tempShowCastDiv.style.left = e.x-120 + 'px';
     tempShowCastDiv.style.top = e.pageY + 'px';
-    console.log("top: " + tempShowCastDiv.style.top);
-    console.log("y: " + e.y);
     tempShowCastDiv.style.backgroundColor = "#e63946";
     tempShowCastDiv.style.border = "2px solid #1d3557";
     tempShowCastDiv.style.borderRadius = "15px"; 
