@@ -149,7 +149,7 @@ function showCast(cast){
 }
 
 function personDetails(castId, personName, e){
-    const url = `http://api.tvmaze.com/people/${castId}/castcredits`;
+    const url = `https://api.tvmaze.com/people/${castId}/castcredits`;
     fetch(url).then(function (response) {
         if (response.ok) {
             return response.json();
