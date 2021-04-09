@@ -10,6 +10,8 @@
         justify-content: space-around;
         align-items: center;
     }
+
+
     
     .divEpisode {
         display: flex;
@@ -24,7 +26,7 @@
         font-size: 1rem;
         margin: 0.5rem;
     }
-    
+   
     .episodeName {
         color: #6b705c;
         font-family: Georgia, 'Times New Roman', Times, serif;
@@ -58,12 +60,49 @@
         border-radius: 5px;
     }
 
+    .summaryCast{
+        margin: 5%;
+    }
 
+    .charsImg{
+        height: 7rem;
+
+    }
+
+    .charsDiv{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        min-width: 18rem;
+        margin: 3%;
+        background-color: #f1faee;
+    }
+
+    .charsChar{
+        font-size: 0.8rem;
+    }
+
+    .mainCastDiv{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 90%;
+        overflow: auto;
+        color: #1d3557;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        margin-left: 3%;
+    }
+
+    
 
     .divShow{
         padding: 20px;
+        
+        background-color: #f1faee;
         border: 2px solid #1d3557;
         border-radius: 5px;
+        margin-left: 2%;
+        margin-right: 2%;
     }
 
     .detailsShowDiv{
@@ -73,6 +112,12 @@
         color: #6b705c;
         font-family: 'Times New Roman', Times, serif;
         font-size: 1rem;
+    }
+
+    .imgShowCastDiv{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
     }
 
     h1{
@@ -96,6 +141,7 @@
         .summaryShowDiv{
             max-width: 30rem;
         }
+
     }
     
     @media screen and (max-width: 950px) {
@@ -123,5 +169,10 @@
 
         .showImage{
         max-width: 4rem;
+        }
+
+        .mainCastDiv{
+            flex-direction: column;
+            max-height: 20rem;
         }
     }

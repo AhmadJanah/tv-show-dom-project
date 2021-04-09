@@ -14,22 +14,29 @@
     <main>
         <div id="root">
             <div id="allShowsContainer">
-                <select name="showsSelect" id="showsSelect" onchange="getSelectedShow()">
-                    <!--option value="all"></option-->
-                </select>
-                <input type="text" id="showSearchText" name="showSearchText" oninput="searchShow()" placeholder="Search for shows">
-                <label id="showResultsCount"></label>
+                <div class="showControl">
+                    <select name="showsSelect" id="showsSelect" onchange="getSelectedShow()">
+                        <!--option value="all"></option-->
+                    </select>
+                    <input type="text" id="showSearchText" name="showSearchText" oninput="searchShow()" placeholder="Search for shows">
+                    <label id="showResultsCount"></label>
+                </div>
                 <div id="shContainer" class="showsContainer">
                 
                 </div>
             </div>
             <div id="allEpisodesContainer">
-                <select name="episodeSelect" id="episodeSelect" onchange="getSelectedEpisode()">
-                    <option value="all"></option>
-                </select>
-                <input type="text" id="searchText" name="searchText" oninput="searchEpisode()" placeholder="Search for Episodes">
-                <label id="resultsCount"></label>
-                <button onclick="backToShows()">Back to Shows list</button>
+                <div class="episodeControl">
+                    <select name="episodeSelect" id="episodeSelect" onchange="getSelectedEpisode()">
+                        <option value="all"></option>
+                    </select>
+                    <input type="text" id="searchText" name="searchText" oninput="searchEpisode()" placeholder="Search for Episodes">
+                    <label id="resultsCount"></label>
+                    <button onclick="backToShows()">Back to Shows list</button>
+                </div>
+                <div class="showCastDiv">
+
+                </div>
                 <div id="epContainer" class="episodesContainer">
 
                 </div>

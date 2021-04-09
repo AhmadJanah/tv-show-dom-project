@@ -5,15 +5,13 @@
 let allEpisodes;
 
 function setup() {
-    // setAllEpisodes("https://api.tvmaze.com/shows/167/episodes");
     const allShows = getAllShows();
     setAllShows(allShows);
 }
 
 // Fetch the episodes by API
-function setAllEpisodes(url){
-    // let url = "https://api.tvmaze.com/shows/167/episodes";
-
+function setAllEpisodes(url, showId){
+    
     fetch(url).then(function (response) {
         if (response.ok) {
             return response.json();
@@ -23,6 +21,8 @@ function setAllEpisodes(url){
         .then(function (data) {
             allEpisodes = data;
             ClearEpisodeSelect();
+            const castUrl = `https://api.tvmaze.com/shows/${showId}?embed=cast`;
+            fetchCast(castUrl)
             makePageForEpisodes(allEpisodes);
             setupSelector(allEpisodes);
         })
@@ -63,6 +63,165 @@ function setupSelector(episodeList){
 }
 
 // Draw the episode inside the div
+function fetchCast(url){
+    fetch(url).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        }
+        throw `${response.status} ${response.statusText}`
+    })
+        .then(function (data) {
+            const cast = data;
+            showCast(cast);
+        })
+        .catch(function (error) {
+            console.log("There are some Errors in Cast", error);
+        })
+}
+
+function showCast(cast){
+    let showCastDiv = document.querySelector(".showCastDiv");
+    let subShowCastDiv = document.createElement("div");
+    subShowCastDiv.className = "subShowCastDiv";
+    
+    let castTitlediv = document.createElement("div");
+    castTitlediv.className = "castTitlediv";
+    let castTitle = document.createElement("h2");
+    castTitle.innerHTML = cast.name;
+    castTitlediv.appendChild(castTitle);
+    let pCast = document.createElement("p");
+    pCast.innerHTML = "<strong>Rating: </strong>" + cast.rating.average + " &nbsp; &nbsp; <strong>Genres:</strong> " + cast.genres + " &nbsp; &nbsp; <strong>Status:</strong> " + cast.status + " &nbsp; &nbsp; <strong>RunTime:</strong> " + cast.runtime;
+    castTitlediv.appendChild(pCast);
+    subShowCastDiv.appendChild(castTitlediv);
+    let imgShowCastDiv = document.createElement("div");
+    imgShowCastDiv.className = "imgShowCastDiv";
+    let castImg = document.createElement("img");
+    if (cast.image.medium != null)
+        castImg.src = cast.image.medium;
+    else 
+        castImg.src = cast.image.original;
+    imgShowCastDiv.appendChild(castImg);
+    let summaryCast = document.createElement("p");
+    summaryCast.className = "summaryCast";
+    summaryCast.innerHTML = cast.summary;
+    imgShowCastDiv.appendChild(summaryCast);
+    subShowCastDiv.appendChild(imgShowCastDiv);
+    let showCasts = cast._embedded.cast;
+    let mainCastDiv = document.createElement("div");
+    mainCastDiv.className = "mainCastDiv";
+    showCasts.forEach(showCast =>{
+
+        let charsDiv = document.createElement("div");
+        charsDiv.className = "charsDiv";
+        charsImg = document.createElement("img");
+        charsImg.className = "charsImg";
+        console.log(showCast);
+        if (showCast.person.image != null){
+            if (showCast.person.image.medium != null)
+                charsImg.src = showCast.person.image.medium;
+            else
+                charsImg.src = showCast.person.image.original;
+    }
+        charsImg.alt = "The image is not provided";
+        charsImg.addEventListener('click', (e) => {
+            personDetails(showCast.person.id, showCast.person.name, e);
+        });
+        charsDiv.appendChild(charsImg);
+        let personDiv = document.createElement("div");
+        let charsPerson = document.createElement("p");
+        charsPerson.innerHTML = showCast.person.name;
+        personDiv.appendChild(charsPerson);
+        let charsAs = document.createElement("p");
+        charsAs.innerHTML = "As:";
+        personDiv.appendChild(charsAs);
+        let charsChar = document.createElement("p");
+        charsChar.className = "charsChar";
+        charsChar.innerHTML = showCast.character.name;
+        personDiv.appendChild(charsChar);
+        charsDiv.appendChild(personDiv);
+        let spaceDiv = document.createElement("div");
+        spaceDiv.innerHTML = " &nbsp; &nbsp; ";
+        charsDiv.appendChild(spaceDiv);
+        mainCastDiv.appendChild(charsDiv);
+    })
+    subShowCastDiv.appendChild(mainCastDiv);
+    showCastDiv.appendChild(subShowCastDiv);
+}
+
+function personDetails(castId, personName, e){
+    const url = `http://api.tvmaze.com/people/${castId}/castcredits`;
+    fetch(url).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        }
+        throw `${response.status} ${response.statusText}`
+    })
+        .then(function (data) {
+            // console.log(data);
+            getCastShows(data, personName, e);
+        })
+        .catch(function (error) {
+            console.log("There are some Errors in person", error);
+        })
+
+}
+
+let isDivOpen = 0;
+let theBody = document.getElementsByTagName("body")[0];
+theBody.addEventListener("click", () =>{
+    if (isDivOpen == 1){
+        isDivOpen = 0;
+        let tempShowCastDiv = document.querySelector(".tempShowCastDiv");
+        theBody.removeChild(tempShowCastDiv);
+    }
+})
+
+function getCastShows(allShows, personName, e){
+    isDivOpen = 1;
+    let tempShowCastDiv = document.createElement("div");
+    tempShowCastDiv.className = "tempShowCastDiv";
+    tempShowCastDiv.style.position = "absolute";
+    tempShowCastDiv.style.width = "16rem";
+    tempShowCastDiv.style.left = e.x-120 + 'px';
+    tempShowCastDiv.style.top = e.pageY + 'px';
+    console.log("top: " + tempShowCastDiv.style.top);
+    console.log("y: " + e.y);
+    tempShowCastDiv.style.backgroundColor = "#e63946";
+    tempShowCastDiv.style.border = "2px solid #1d3557";
+    tempShowCastDiv.style.borderRadius = "15px"; 
+    let h4Tag = document.createElement("h4");
+    h4Tag.innerHTML = personName + " Shows: ";
+    h4Tag.style.textAlign = "center";
+    h4Tag.style.backgroundColor = "#a8dadc";
+    tempShowCastDiv.appendChild(h4Tag);
+    theBody.appendChild(tempShowCastDiv);
+    allShows.forEach(element => {
+        const showsUrl = element._links.show.href;
+        fetch(showsUrl).then(function (response) {
+            if (response.ok) {
+                return response.json();
+            }
+            throw `${response.status} ${response.statusText}`
+        })
+            .then(function (data) {
+                const showId = data.id;
+                const showName = data.name;
+                let pTag = document.createElement("p");
+                pTag.innerHTML = showName;
+                pTag.style.cursor = "pointer";
+                pTag.addEventListener("click", () =>{
+                    document.querySelector(".showCastDiv").removeChild(document.querySelector(".subShowCastDiv"));
+                    goEpisodes(showId);
+                });
+                tempShowCastDiv.appendChild(pTag);
+
+            })
+            .catch(function (error) {
+                console.log("There are some Errors in person shows", error);
+            })
+    })
+}
+
 function setBoxEpisode(episode) {
     let epContainer = document.getElementById("epContainer");
     
@@ -243,7 +402,8 @@ function backToShows(){
     episodediv.hidden = true;
     let showdiv = document.getElementById("allShowsContainer");
     showdiv.hidden = false;
-    
+    document.getElementById("showsSelect").value = "";
+    document.querySelector(".showCastDiv").removeChild(document.querySelector(".subShowCastDiv"));
 }
 
 
@@ -265,17 +425,9 @@ function getSelectedShow(){
     let selectorVal = document.getElementById("showsSelect").value;
     const allShows = getAllShows();
     
-    // if (selectorVal === "all") {
-    //     makePageForEpisodes(allEpisodes);
-    // }
-    // else {
-        let newShow = allShows.find(show => show.name === selectorVal);
-   
-    let myUrl = `https://api.tvmaze.com/shows/${newShow.id}/episodes`;
-    
-    clearRoot();
-    setAllEpisodes(myUrl);
-    // }
+    let newShow = allShows.find(show => show.name === selectorVal);
+    goEpisodes(newShow.id);
+
 }
 
 /////  ******           Level 500         *********  ///////
@@ -321,11 +473,9 @@ function setBoxShow(show) {
     let rateShow = document.createElement("p");
     rateShow.innerHTML = "Rated: " + show.rating.average;
     showPropertyDiv.appendChild(rateShow);
-    // appendLineBreak(showPropertyDiv);
     let genresShow = document.createElement("p");
     genresShow.innerHTML = "Genres: " + show.genres;
     showPropertyDiv.appendChild(genresShow);
-    // appendLineBreak(showPropertyDiv);
     let statusShow = document.createElement("p");
     statusShow.innerHTML = "Status: " + show.status;
     showPropertyDiv.appendChild(statusShow);
@@ -347,7 +497,7 @@ function goEpisodes(showId){
     let episodediv = document.getElementById("allEpisodesContainer");
     episodediv.hidden = false;
     clearRoot();
-    setAllEpisodes(myUrl);
+    setAllEpisodes(myUrl, showId);
 
     
 }
@@ -372,13 +522,11 @@ function makePageForShows(showList) {
     episodediv.hidden = true;
     let showdiv = document.getElementById("allShowsContainer");
     showdiv.hidden = false;
-    // if (episodediv != null)
-    //     epContainer.remove(episodediv);
     
     showList.forEach(show => {
         setBoxShow(show);
     });
-    //rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+    
 }
 
 // Draw the sortede shows inside the selector
@@ -395,9 +543,8 @@ function searchShow() {
     let textVal = document.getElementById("showSearchText").value;
     let searchText = textVal.charAt(0).toUpperCase() + textVal.substring(1);
     let searchText2 = textVal.charAt(0) + textVal.substring(1).toLowerCase();
-    // document.getElementById("episodeSelect").value = "";
+    
     const allShows = getAllShows();
-    // clearAllSpans(allEpisodes);
     let newShows = [];
     allShows.forEach(show => {
         
