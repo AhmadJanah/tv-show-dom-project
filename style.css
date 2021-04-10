@@ -11,6 +11,11 @@
         align-items: center;
     }
 
+    .showName{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
 
     
     .divEpisode {

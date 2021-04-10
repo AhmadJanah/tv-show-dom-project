@@ -96,10 +96,13 @@ function showCast(cast){
     let imgShowCastDiv = document.createElement("div");
     imgShowCastDiv.className = "imgShowCastDiv";
     let castImg = document.createElement("img");
-    if (cast.image.medium != null)
-        castImg.src = cast.image.medium;
-    else 
-        castImg.src = cast.image.original;
+    if (cast.image != null){
+        if (cast.image.medium != null)
+            castImg.src = cast.image.medium;
+        else 
+            castImg.src = cast.image.original;
+    }
+    castImg.alt = "The image is not provided";
     imgShowCastDiv.appendChild(castImg);
     let summaryCast = document.createElement("p");
     summaryCast.className = "summaryCast";
@@ -115,6 +118,7 @@ function showCast(cast){
         charsDiv.className = "charsDiv";
         charsImg = document.createElement("img");
         charsImg.className = "charsImg";
+        charsImg.style.cursor = "pointer";
         if (showCast.person.image != null){
             if (showCast.person.image.medium != null)
                 charsImg.src = showCast.person.image.medium;
@@ -233,21 +237,62 @@ function setBoxEpisode(episode) {
     appendLineBreak(divEpisode);
     let imgDiv = document.createElement("div");
     imgDiv.className = "imgDiv";
+    imgDiv.title = "Enter to Add your note";
     let midImg = document.createElement("img");
     if (episode.image != null)
         midImg.src = episode.image.medium;
     midImg.alt = "Medium Image";
+    midImg.addEventListener("click", () => {
+        let textNote = document.createElement("input");
+        textNote.type = "text";
+        imgDiv.appendChild(textNote);
+    });
     imgDiv.appendChild(midImg);
     divEpisode.appendChild(imgDiv);
     let summaryTextDiv = document.createElement("div");
     summaryTextDiv.className = "summaryTextDiv";
     let summaryP = document.createElement("p");
-    summaryP.innerHTML = episode.summary;
     summaryTextDiv.appendChild(summaryP);
+    summaryP.innerHTML = truncateSummary(summaryTextDiv, summaryP, episode.summary, 220); // episode.summary;
     divEpisode.appendChild(summaryTextDiv);
 
     epContainer.appendChild(divEpisode);
 
+}
+
+function truncateSummary(parentNode, childNode, summary, num, callSelf = 0){
+    if (summary === null){
+        return "";
+    }
+    if (summary.length <= num) {
+        return summary;
+    }
+
+    let readBtn = document.createElement("button");
+    readBtn.innerText = "Read More";
+    let readLessBtn = document.createElement("button");
+    readLessBtn.innerText = "Read Less";
+    readBtn.addEventListener("click", () =>{
+        parentNode.removeChild(childNode);
+        parentNode.removeChild(readBtn);
+        childNode.innerHTML = summary;
+        
+        parentNode.appendChild(childNode);
+        parentNode.appendChild(readLessBtn);
+        // truncateSummary(parentNode, childNode, summary,summary.length);
+    });
+    readLessBtn.addEventListener("click", () => {
+        parentNode.removeChild(childNode);
+        parentNode.removeChild(readLessBtn);
+        childNode.innerHTML = truncateSummary(parentNode, childNode, summary, num, 1);
+
+        parentNode.appendChild(childNode);
+        parentNode.appendChild(readBtn);
+        // truncateSummary(parentNode, childNode, summary,summary.length);
+    });
+    if (callSelf == 0)
+        parentNode.appendChild(readBtn);
+    return summary.slice(0, num);
 }
 
 // setup the code pf the Episode to add it in the title
@@ -429,6 +474,9 @@ function getSelectedShow(){
 /////  ******           Level 500         *********  ///////
 
 // Draw the show inside the div
+
+let favouriteShows = [];
+
 function setBoxShow(show) {
     let shContainer = document.getElementById("shContainer");
     appendLineBreak(shContainer);
@@ -443,8 +491,44 @@ function setBoxShow(show) {
         goEpisodes(show.id);
     });
     showName.appendChild(showTitle);
+    let favourit = document.createElement("canvas");
+    favourit.title = "Mark as Favourite";
+    let ctx = favourit.getContext("2d")
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#333";
+    ctx.beginPath();
+    ctx.moveTo(63, 27);
+    ctx.bezierCurveTo(89, 7, 111, 50, 68, 84);
+    ctx.moveTo(63, 27);
+    ctx.bezierCurveTo(4, 10, 25, 65, 68, 84);
+    ctx.stroke();
+    if (favouriteShows.includes(show.id)) {
+        ctx.fillStyle = "red";
+        ctx.fill();
+    }
+    else {
+        ctx.fillStyle = "#f1faee";
+        ctx.fill();
+    }
+    favourit.addEventListener("click", () =>{
+        if (favouriteShows.includes(show.id)){
+            ctx.fillStyle = "#f1faee";
+            ctx.fill();
+            // favouriteShows.replace(show.name, "");
+            const index = favouriteShows.indexOf(show.id);
+            if (index > -1) {
+                favouriteShows.splice(index, 1);
+                
+            }
+        }
+        else{
+            ctx.fillStyle = "red";
+            ctx.fill();
+            favouriteShows.push(show.id);
+        }
+    });
     divShow.appendChild(showName);
-
+    showName.appendChild(favourit);
     let detailsShowDiv = document.createElement("div");
     detailsShowDiv.className = "detailsShowDiv";
 
