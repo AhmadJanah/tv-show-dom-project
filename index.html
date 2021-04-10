@@ -10,30 +10,42 @@
 </head>
 
 <body>
-    <header></header>
+    <header>
+        
+        <div class="header-img-div">
+            <img src="TV-logo.png" alt="Header logo" onclick="backToShows()">
+        </div>
+        <div class="showControl">
+            <select name="showsSort" id="showsSort" placeholder="Sort By:" onchange="getSortedShows()">
+                <option value="NON">Sort By:</option>
+                <option value="Name">Name</option>
+                <option value="Rating">Rating</option>
+            </select>
+            <select name="showsSelect" id="showsSelect" onchange="getSelectedShow()">
+                <!--option value="all"></option-->
+            </select>
+            <input type="text" id="showSearchText" name="showSearchText" oninput="searchShow()" placeholder="Search for shows">
+            <label id="showResultsCount"></label>
+        </div>
+        <div class="episodeControl" hidden="true">
+            <select name="episodeSelect" id="episodeSelect" onchange="getSelectedEpisode()">
+                <option value="all"></option>
+            </select>
+            <input type="text" id="searchText" name="searchText" oninput="searchEpisode()" placeholder="Search for Episodes">
+            <label id="resultsCount"></label>
+            <!--button onclick="backToShows()">Back to Shows list</button-->
+        </div>
+    </header>
     <main>
         <div id="root">
             <div id="allShowsContainer">
-                <div class="showControl">
-                    <select name="showsSelect" id="showsSelect" onchange="getSelectedShow()">
-                        <!--option value="all"></option-->
-                    </select>
-                    <input type="text" id="showSearchText" name="showSearchText" oninput="searchShow()" placeholder="Search for shows">
-                    <label id="showResultsCount"></label>
-                </div>
+                
                 <div id="shContainer" class="showsContainer">
                 
                 </div>
             </div>
             <div id="allEpisodesContainer">
-                <div class="episodeControl">
-                    <select name="episodeSelect" id="episodeSelect" onchange="getSelectedEpisode()">
-                        <option value="all"></option>
-                    </select>
-                    <input type="text" id="searchText" name="searchText" oninput="searchEpisode()" placeholder="Search for Episodes">
-                    <label id="resultsCount"></label>
-                    <button onclick="backToShows()">Back to Shows list</button>
-                </div>
+                
                 <div class="showCastDiv">
 
                 </div>

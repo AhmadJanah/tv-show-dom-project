@@ -2,7 +2,43 @@
         padding: 2rem;
         background-color: #a8dadc;
     }
+
     
+    .header-img-div img{
+        cursor: pointer;
+        height: 6rem;
+        /* margin-left: 60%; */
+    }
+
+    .showControl, .episodeControl{
+        margin-top: 2%;
+    }
+
+    header{
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        background-color: #1d3557;
+    }
+
+    /* .nav-list {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        padding: 2%;
+        justify-content: space-between;
+        list-style-type: none;
+        font-size: 1rem;
+        width: 70%;
+    } */
+
+    .nav-list li{
+        margin-right: 5%;
+        padding-left: 5%;
+        width: 30%;
+    }
+
     .episodesContainer {
         display: flex;
         flex-direction: row;
@@ -59,10 +95,19 @@
         background-color: #ffb703;
     }
     
-    #showsSelect, #episodeSelect{
+    #showsSelect, #episodeSelect, #showSearchText, #searchText, #showsSort {
         width: 15rem;
-        border: 1px solid #1d3557;
+        height: 2rem;
+        border: 2px solid #e63946;
         border-radius: 5px;
+        color: #1d3557;
+        background-color: #f1faee;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: medium;
+    }
+
+    #showResultsCount{
+        color: #e63946;
     }
 
     .summaryCast{

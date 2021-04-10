@@ -443,12 +443,17 @@ function backToShows(){
     episodediv.hidden = true;
     let showdiv = document.getElementById("allShowsContainer");
     showdiv.hidden = false;
+    let episodeControl = document.querySelector(".episodeControl");
+    let showControl = document.querySelector(".showControl");
+    showControl.hidden = false;
+    episodeControl.hidden = true;
     document.getElementById("showsSelect").value = "";
-    document.querySelector(".showCastDiv").removeChild(document.querySelector(".subShowCastDiv"));
+    document.getElementById("showSearchText").value = "";
+    document.getElementById("showSearchText").innerHTML = "";
+    if (document.querySelector(".subShowCastDiv") != null)
+        document.querySelector(".showCastDiv").removeChild(document.querySelector(".subShowCastDiv"));
+    searchShow();
 }
-
-
-
 
 /////////////////// *********           Shows Section           *********////////////////
 
@@ -576,6 +581,10 @@ function goEpisodes(showId){
     showdiv.hidden = true;
     let episodediv = document.getElementById("allEpisodesContainer");
     episodediv.hidden = false;
+    let episodeControl = document.querySelector(".episodeControl");
+    let showControl = document.querySelector(".showControl");
+    showControl.hidden = true;
+    episodeControl.hidden = false;
     clearRoot();
     setAllEpisodes(myUrl, showId);
 
@@ -602,6 +611,10 @@ function makePageForShows(showList) {
     episodediv.hidden = true;
     let showdiv = document.getElementById("allShowsContainer");
     showdiv.hidden = false;
+    let episodeControl = document.querySelector(".episodeControl");
+    let showControl = document.querySelector(".showControl");
+    showControl.hidden = false;
+    episodeControl.hidden = true;
     
     showList.forEach(show => {
         setBoxShow(show);
@@ -706,6 +719,35 @@ function clearShows(){
         if (line.parentElement == shContainer)
             shContainer.removeChild(line);
     })
+}
+
+function getSortedShows(){
+    const allShows = getAllShows();
+    let showsSort = document.getElementById("showsSort");
+    if (showsSort.value == "Rating"){
+        allShows.sort(compareRate);
+    }
+    else if (showsSort.value == "Name") {
+        allShows.sort(compare);
+    }
+    clearShows();
+    allShows.forEach(show => {
+        setBoxShow(show);
+    });
+}
+
+function compareRate(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const rateA = a.rating;
+    const rateB = b.rating;
+
+    let comparison = 0;
+    if (rateA > rateB) {
+        comparison = 1;
+    } else if (rateA < rateB) {
+        comparison = -1;
+    }
+    return comparison;
 }
 
 window.onload = setup
