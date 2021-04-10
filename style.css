@@ -95,8 +95,8 @@
         background-color: #ffb703;
     }
     
-    #showsSelect, #episodeSelect, #showSearchText, #searchText, #showsSort {
-        width: 15rem;
+    #showsSelect, #episodeSelect, #showSearchText, #searchText, #showsSort, #showsFilter {
+        width: 12rem;
         height: 2rem;
         border: 2px solid #e63946;
         border-radius: 5px;
@@ -104,6 +104,10 @@
         background-color: #f1faee;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         font-size: medium;
+    }
+
+    #episodeSelect, #searchText{
+        width: 18rem;
     }
 
     #showResultsCount{

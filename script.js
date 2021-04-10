@@ -736,6 +736,24 @@ function getSortedShows(){
     });
 }
 
+function getFilteredShows(){
+    const allShows = getAllShows();
+    let showsFilter = document.getElementById("showsFilter");
+    clearShows();
+    if (showsFilter.value == "NON"){
+        allShows.forEach(show => {
+            setBoxShow(show);
+        });
+    }
+    else{
+        allShows.forEach(show => {
+        if (show.genres.includes(showsFilter.value)){
+            setBoxShow(show);
+        }
+        });
+    }
+}
+
 function compareRate(a, b) {
     // Use toUpperCase() to ignore character casing
     const rateA = a.rating;
